@@ -7,8 +7,10 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
 
@@ -19,10 +21,27 @@ import java.util.Map;
 public class KafkaConsumerConfig {
 
     /**
+     * 기능 : ConcurrentKafkaListenerContainerFactory 사용
+     * comment : -> @KafkaListener 상용하기 위해서
+     */
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, String> concurrentMessageListenerContainer() {
+
+        ConcurrentKafkaListenerContainerFactory<String, String> concurrentFactory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+
+        // consumerFactory를 주입한다.
+        concurrentFactory.setConsumerFactory(consumerFactory());
+
+        return concurrentFactory;
+    }
+
+    /**
      * 기능 : Consumer 객체를 생성하기
      *       => Consumer 객체에서 왜 속성을 다시 정의하나요?
      *       => props에서 하지 않는 이유는 무엇인가요?
      *          => 서로 다른 용도의 Consumer가 있기 때문에?
+     * comment : interface인 MessageListener를 사용해서 컨슈머를 등록한다.
      */
     @Bean
     public KafkaMessageListenerContainer<String, String> makeListenerContainer() {
