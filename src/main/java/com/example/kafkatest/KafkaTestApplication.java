@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.listener.KafkaMessageListenerContainer;
 
 @SpringBootApplication
 @EnableKafka
@@ -19,7 +20,7 @@ public class KafkaTestApplication {
 	 * spring boot application 이 실행되고 나서 특정 작업을 바로 실행할 수 있도록 적용하는 기능
 	 * @return
 	 */
-	@Bean
+//	@Bean
 	public ApplicationRunner runner(KafkaTemplate<String, String> kafkaTemplate) {
 
 		// 실행할 내용을 정의
@@ -28,6 +29,20 @@ public class KafkaTestApplication {
 		return (args) -> {
 			// Producer 만들기
 			kafkaTemplate.send("mytest3", "spring for kafaka");
+		};
+
+	}
+
+	/**
+	 * Spring boot application 이 실행되고 나서 특정 작업을 바로 실행할 수 있도록 적용하는 기능
+	 */
+	@Bean
+	public ApplicationRunner runner(KafkaTemplate<String, String> kafkaTemplate,
+									KafkaMessageListenerContainer<String, String> container
+									) {
+
+		return (args) -> {
+			container.start();
 		};
 
 	}
