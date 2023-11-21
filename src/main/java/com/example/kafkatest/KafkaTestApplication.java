@@ -20,7 +20,7 @@ public class KafkaTestApplication {
 	 * spring boot application 이 실행되고 나서 특정 작업을 바로 실행할 수 있도록 적용하는 기능
 	 * @return
 	 */
-//	@Bean
+	@Bean
 	public ApplicationRunner runner(KafkaTemplate<String, String> kafkaTemplate) {
 
 		// 실행할 내용을 정의
@@ -28,7 +28,7 @@ public class KafkaTestApplication {
 		// kafka Producer는 kafkaTempalte을 이용해서 생성
 		return (args) -> {
 			// Producer 만들기
-			kafkaTemplate.send("mytest3", "spring for kafaka");
+			kafkaTemplate.send("mytest3awerwasdf", "spring for kafaka");
 		};
 
 	}
@@ -43,6 +43,16 @@ public class KafkaTestApplication {
 
 		return (args) -> {
 			container.start();
+			Thread.sleep(10000);// 10초 정지
+
+			System.out.println("============ pause(잠시멈춤) ================");
+			container.pause();
+
+			System.out.println("============ resume(다시실행) ============");
+			container.resume();
+
+			System.out.println("============ stop(중지) ============");
+			container.stop();
 		};
 
 	}
